@@ -13,6 +13,11 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v3
+      
+    - name: Set up Docker tag with date
+      id: prep
+      run: |
+        echo "DATE_TAG=hello-$(date +'%Y%m%d_%H%M')" >> $GITHUB_ENV
 
     - name: Login to DockerHub
       uses: docker/login-action@v3
@@ -21,7 +26,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t jann7790/2025cloud:hello .
+      run: docker build -t jann7790/2025cloud:${{ env.DATE_TAG }} .
 
     - name: Push Docker image
-      run: docker push jann7790/2025cloud:hello
+      run: docker push jann7790/2025cloud:${{ env.DATE_TAG }}
