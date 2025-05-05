@@ -29,11 +29,44 @@ Hello from main.py inside a Docker container!
 3. 使用動態時間標籤格式 `hello-yyyymmdd_hhMM`（例如：`hello-20250503_1545`）
 4. 自動推送至 Docker Hub
 
-## 標籤策略
+jann7790: 描述目前專案自動化產生 Container Image
+的邏輯，以及 Tag 的選擇邏輯
 
-本專案採用以下標籤命名規則：
+GitHub Copilot: I'll analyze the current project to understand how it generates container images and how it manages image tags. Let me first check the project files to gather the necessary information.Based on the analysis of your project files, let me explain how your project automates container image generation and manages image tags:
 
-- 格式：`hello-yyyymmdd_hhMM`
-- 範例：`hello-20250503_1545`（2025年5月3日 15:45 建置）
-- 此命名方式可確保每次建置產生的映像檔都有獨特的標籤，同時保留建置時間資訊
+## container image 自動化產生邏輯
 
+透過 docker-iamge.yml 使用 GitHub Actions 來自動化建置和推送 Docker 映像：
+
+1. **觸發條件**：當程式碼被推送到 `main` 分支或有針對 `main` 分支的 Pull Request 時，CI/CD 流程會自動啟動。
+
+2. **流程**：
+   1. checkout source code
+   ![alt text](image.png)
+   2. 設置 Docker tag（使用日期時間）
+   ![alt text](image-1.png)
+   3. 登入 DockerHub（使用儲存的認證）
+   ![alt text](image-2.png)
+   4. Build Docker image
+   ![alt text](image-3.png)
+   5. 推送映像至 DockerHub
+   ![alt text](image-4.png)
+
+
+3. **Dockerfile 結構**：
+   - 基於 `python:3.10-slim` iamge
+   - 創建 `/app` 工作目錄
+   - 複製 main.py 進入 container
+   - 設置預設執行命令 `python main.py`
+
+## Tag 選擇邏輯
+
+您的專案採用時間戳記標籤策略：
+
+1. **標籤格式**：`hello-yyyymmdd_HHMM`
+   - 例如：`hello-20250503_1545
+
+2. **生成方式**：
+   ```
+   echo "DATE_TAG=hello-$(date +'%Y%m%d_%H%M')" >> $GITHUB_ENV
+   ```
