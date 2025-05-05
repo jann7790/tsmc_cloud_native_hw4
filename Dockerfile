@@ -8,4 +8,4 @@ WORKDIR /app
 COPY main.py .
 
 # 預設執行指令
-CMD ["python", "main.py"]
+CMD ["python2", "main.py"]
