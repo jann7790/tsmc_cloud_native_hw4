@@ -26,7 +26,12 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image
-      run: docker build -t jann7790/2025cloud:${{ env.DATE_TAG }} .
-
+      run: docker build -t jann7790/2025cloud:${{ env.DATE_TAG }} -t jann7790/2025cloud:hello .
+      
+    - name: Test Docker container
+      run: docker run --rm jann7790/2025cloud:hello
+      
     - name: Push Docker image
-      run: docker push jann7790/2025cloud:${{ env.DATE_TAG }}
+      run: |
+        docker push jann7790/2025cloud:${{ env.DATE_TAG }}
+        docker push jann7790/2025cloud:hello
